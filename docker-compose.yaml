@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  rede-api:
+    driver: bridge
+
+volumes:
+  volume-api:
+
+services:
+  api:
+    image: ivanjuniordocker/api-produto:1.0
+    networks:
+      - rede-api
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongodb
+    environment:
+      MONGODB_URI: mongodb://mongouser:mongopwd@mongodb:27017/admin
+  mongodb:
+    image: mongo:4.4.3
+    networks:
+      - rede-api
+    ports:
+      - 27017:27017
+    volumes:
+      - volume-api:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: mongopwd
+      
